@@ -1,17 +1,13 @@
 const Card = require('../models/card');
+const { NOT_FOUND_ERROR, BAD_REQUEST_ERROR, DEFAULT_ERROR , STATUS_OK} = require('../utills/errorConstants');
 
 // получить карточки
-const getCards = (req, res) => {
+const getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => {
-      res.status(200).send(cards)
+      res.status(STATUS_OK).send(cards)
     })
-    .catch((err, cards) => {
-      if (!cards) {
-        return res.status(404).send({ message: 'карточки не найдены' })
-      }
-      return res.status(500).send({ message: "на севрере произошла ошибка, пожалуйста попробуйте снова" })
-    })
+    .catch(next)
 }
 
 // создать карточку
@@ -19,13 +15,13 @@ const createCard = (req, res) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
     .then((cards) => {
-      res.status(200).send(cards)
+      res.status(STATUS_OK).send(cards)
     })
     .catch(err => {
       if (err.name === 'ValidationError') {
-        return res.status(400).send({ message: 'переданы неккорректные данные в метод создания карточки' })
+        return res.status(BAD_REQUEST_ERROR).send({ message: 'переданы неккорректные данные в метод создания карточки' })
       }
-      return res.status(500).send({ message: "на севрере произошла ошибка, пожалуйста попробуйте снова" })
+      return res.status(DEFAULT_ERROR).send({ message: "на севрере произошла ошибка, пожалуйста попробуйте снова" })
     })
 }
 // удалить карточку по id
@@ -33,15 +29,15 @@ const deleteCardById = (req, res) => {
   Card.findByIdAndRemove(req.params.id)
     .then((card) => {
       if (card === null || card === undefined) {
-        return res.status(404).send({ message: 'карточка с данным id не найдена' })
+        return res.status(NOT_FOUND_ERROR).send({ message: 'карточка с данным id не найдена' })
       }
-      return res.status(200).send({ message: 'данные карточки удалены' })
+      return res.status(STATUS_OK).send({ message: 'данные карточки удалены' })
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return res.status(400).send({ message: 'переданы некорректные данные при удалении карточки.' });
+      if (err.name === 'CastError') {
+        return res.status(BAD_REQUEST_ERROR).send({ message: 'переданы некорректные данные при удалении карточки.' });
       }
-      return res.status(500).send({ message: 'на севрере произошла ошибка, пожалуйста попробуйте снова' });
+      return res.status(DEFAULT_ERROR).send({ message: 'на севрере произошла ошибка, пожалуйста попробуйте снова' });
     })
 }
 
@@ -54,15 +50,15 @@ const likeCard = (req, res) => {
   )
     .then((card) => {
       if (card === null || card === undefined) {
-        return res.status(404).send({ message: 'карточка с данным id не найдена' })
+        return res.status(NOT_FOUND_ERROR).send({ message: 'карточка с данным id не найдена' })
       }
-      return res.status(200).send(card)
+      return res.status(STATUS_OK).send(card)
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return res.status(400).send({ message: 'переданы некорректные данные при удалении карточки.' });
+      if (err.name === 'CastError') {
+        return res.status(BAD_REQUEST_ERROR).send({ message: 'переданы некорректные данные при удалении карточки.' });
       }
-      return res.status(500).send({ message: 'на севрере произошла ошибка, пожалуйста попробуйте снова' });
+      return res.status(DEFAULT_ERROR).send({ message: 'на севрере произошла ошибка, пожалуйста попробуйте снова' });
     });
 };
 // удалить лайк с карточки
@@ -74,15 +70,15 @@ const deleteCardLike = (req, res) => {
   )
     .then((card) => {
       if (card === null || card === undefined) {
-        return res.status(404).send({ message: 'карточка с данным id не найдена' })
+        return res.status(NOT_FOUND_ERROR).send({ message: 'карточка с данным id не найдена' })
       }
-      return res.status(200).send(card)
+      return res.status(STATUS_OK).send(card)
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        return res.status(400).send({ message: 'переданы некорректные данные при удалении карточки.' });
+      if (err.name === 'CastError') {
+        return res.status(BAD_REQUEST_ERROR).send({ message: 'переданы некорректные данные при удалении карточки.' });
       }
-      return res.status(500).send({ message: 'на севрере произошла ошибка, пожалуйста попробуйте снова' });
+      return res.status(DEFAULT_ERROR).send({ message: 'на севрере произошла ошибка, пожалуйста попробуйте снова' });
     });
 }
 
