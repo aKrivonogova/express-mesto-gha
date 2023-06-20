@@ -7,5 +7,5 @@ module.exports = {
   NOT_FOUND_ERROR,
   BAD_REQUEST_ERROR,
   DEFAULT_ERROR,
-  STATUS_OK
-}
+  STATUS_OK,
+};

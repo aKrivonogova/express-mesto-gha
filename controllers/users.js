@@ -1,13 +1,18 @@
 const User = require('../models/user');
-const { NOT_FOUND_ERROR,BAD_REQUEST_ERROR,DEFAULT_ERROR, STATUS_OK} = require('../utills/errorConstants');
+const {
+  NOT_FOUND_ERROR,
+  BAD_REQUEST_ERROR,
+  DEFAULT_ERROR,
+  STATUS_OK,
+} = require('../utills/errorConstants');
 // Запросить всех пользователей
 const getUsers = (req, res, next) => {
   User.find({})
     .then((users) => {
       res.status(STATUS_OK).send((users));
     })
-    .catch(next)
-}
+    .catch(next);
+};
 
 // Запросить конкретного пользователя
 const getUser = (req, res) => {
@@ -16,18 +21,16 @@ const getUser = (req, res) => {
       if (user === null) {
         return res.status(NOT_FOUND_ERROR).send({ message: 'пользователь с таким id не найден' });
       }
-      return res.status(STATUS_OK).send({ data: user })
+      return res.status(STATUS_OK).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         return res.status(BAD_REQUEST_ERROR).send({ message: 'переданы некорректные данные в метод создания пользователя' });
       }
-      return res.status(DEFAULT_ERROR).send({ message: 'на сервере произошла ошибка, пожалуйста попробуйте снова' })
-    })
-}
+      return res.status(DEFAULT_ERROR).send({ message: 'на сервере произошла ошибка, пожалуйста попробуйте снова' });
+    });
+};
 
-
-//Обновить данные пользователя
 const updateUser = (req, res) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
@@ -39,8 +42,8 @@ const updateUser = (req, res) => {
         return res.status(BAD_REQUEST_ERROR).send({ message: 'переданы некорректные данные при методе обновления профиля' });
       }
       return res.status(DEFAULT_ERROR).send({ message: 'на сервере произошла ошибка, пожалуйста попробуйте снова' });
-    })
-}
+    });
+};
 
 const updateUserAvatar = (req, res) => {
   const { avatar } = req.body;
@@ -53,8 +56,8 @@ const updateUserAvatar = (req, res) => {
         return res.status(BAD_REQUEST_ERROR).send({ message: 'переданы некорректные данные при методе обновления аватара' });
       }
       return res.status(DEFAULT_ERROR).send({ message: 'на сервере произошла ошибка, пожалуйста попробуйте снова' });
-    })
-}
+    });
+};
 
 // Создание нового юзера
 
@@ -62,21 +65,20 @@ const createUser = (req, res) => {
   const { name, about, avatar } = req.body;
   User.create({ name, about, avatar })
     .then((user) => {
-      res.status(STATUS_OK).send(user)
+      res.status(STATUS_OK).send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(BAD_REQUEST_ERROR).send({ message: 'переданы неккорректные данные в метод создания пользователя' })
+        return res.status(BAD_REQUEST_ERROR).send({ message: 'переданы неккорректные данные в метод создания пользователя' });
       }
-      return res.status(DEFAULT_ERROR).send({ message: "на севрере произошла ошибка, пожалуйста попробуйте снова" })
-    })
-}
-
+      return res.status(DEFAULT_ERROR).send({ message: 'на севрере произошла ошибка, пожалуйста попробуйте снова' });
+    });
+};
 
 module.exports = {
   getUsers,
   getUser,
   createUser,
   updateUser,
-  updateUserAvatar
-}
+  updateUserAvatar,
+};
