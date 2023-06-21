@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const usersRoutes = require('./routes/users');
 const cardsRoutes = require('./routes/cards');
+const notFoundRoute = require('./utills/notFoundRoute');
 
 const app = express();
 
@@ -22,5 +23,8 @@ app.use((req, res, next) => {
 
 app.use('/', usersRoutes);
 app.use('/', cardsRoutes);
+app.use('*', (req, res) => {
+  notFoundRoute(req, res);
+});
 
-app.listen(PORT, () => {});
+app.listen(PORT, () => { });
