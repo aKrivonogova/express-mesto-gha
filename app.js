@@ -19,7 +19,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 mongoose.connect('mongodb://127.0.0.1/mestodb');
-app.use(errors());
 
 app.post('/signin', loginUserValidation, login);
 app.post('/signup', createUserValidation, createUser);
@@ -27,6 +26,8 @@ app.post('/signup', createUserValidation, createUser);
 app.use(auth);
 app.use('/', usersRoutes);
 app.use('/', cardsRoutes);
+app.use(errors());
+
 app.use('*', (req, res, next) => {
   next(new NotFoundError('Маршрут не найден'));
 });

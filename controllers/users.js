@@ -86,17 +86,17 @@ const createUser = (req, res, next) => {
         avatar: user.avatar,
         email: user.email,
       });
-    });
-  })
-    .catch((err) => {
-      if (err.name === 'MongoServerError') {
-        return next(new DuplicateError('Пользователь с таким email уже существует'));
-      }
-      if (err.name === 'ValidationError') {
-        return next(new BadRequestError('Некорректные данные'));
-      }
-      return next(new DefaultError('на сервере произошла ошибка'));
-    });
+    })
+      .catch((err) => {
+        if (err.name === 'MongoServerError') {
+          return next(new DuplicateError('Пользователь с таким email уже существует'));
+        }
+        if (err.name === 'ValidationError') {
+          return next(new BadRequestError('Некорректные данные'));
+        }
+        return next(new DefaultError('на сервере произошла ошибка'));
+      });
+  });
 };
 
 const login = (req, res, next) => {
