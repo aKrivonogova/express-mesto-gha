@@ -12,6 +12,7 @@ const AuthError = require('../errors/AuthError');
 
 const SOULT = 10;
 const STATUS_OK = 200;
+const STATUS_OK_CREATE = 201;
 
 // Запросить всех пользователей
 const getUsers = (req, res, next) => {
@@ -79,7 +80,7 @@ const createUser = (req, res, next) => {
     User.create({
       name, about, avatar, email, password: hash,
     }).then((user) => {
-      res.status(STATUS_OK).send({
+      res.status(STATUS_OK_CREATE).send({
         name: user.name,
         about: user.about,
         avatar: user.avatar,

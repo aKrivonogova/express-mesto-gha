@@ -1,6 +1,7 @@
 const Card = require('../models/card');
 
 const STATUS_OK = 200;
+const STATUS_OK_CREATE = 201;
 const BadRequestError = require('../errors/BadRequestError');
 const NotFoundError = require('../errors/NotFoundError');
 const DefaultError = require('../errors/DefaultError');
@@ -20,7 +21,7 @@ const createCard = (req, res, next) => {
   const { name, link } = req.body;
   Card.create({ name, link, owner: req.user._id })
     .then((cards) => {
-      res.status(STATUS_OK).send(cards);
+      res.status(STATUS_OK_CREATE).send(cards);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
@@ -45,7 +46,6 @@ const deleteCardById = (req, res, next) => {
           .then((deletedCard) => {
             res.status(STATUS_OK).send(deletedCard);
           });
-        return next(new DefaultError('на сервере произошла ошибка!'));
       }
     })
     .catch(next);
